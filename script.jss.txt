@@ -1,0 +1,172 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const studyForm = document.getElementById('studyForm');
+  const resourceList = document.getElementById('resourceList');
+  const moreResourcesButton = document.getElementById('moreResources');
+  const goBackButton = document.getElementById('goBack');
+  const goForwardButton = document.getElementById('goForward');
+  const clearSearchBottomButton = document.getElementById('clearSearchBottom');
+  const goToTopButton = document.getElementById('goToTop');
+
+  let currentTopic = '';
+  let displayedResources = [];
+  let previousResources = [];
+  let resourceHistory = [];
+
+  studyForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const studyTopic = document.getElementById('studyTopic').value.trim();
+
+    if (studyTopic !== currentTopic) {
+      displayedResources = [];
+      currentTopic = studyTopic;
+      resourceList.innerHTML = '';
+      goBackButton.style.display = 'none';
+      goForwardButton.style.display = 'none';
+      resourceHistory = [];
+    }
+
+    fetchResources(studyTopic, 10); // Fetch 10 resources initially
+  });
+
+  clearSearchBottomButton.addEventListener('click', function() {
+    resourceList.innerHTML = '';
+    document.getElementById('studyTopic').value = '';
+    displayedResources = [];
+    currentTopic = '';
+    previousResources = [];
+    resourceHistory = [];
+    goBackButton.style.display = 'none';
+    goForwardButton.style.display = 'none';
+  });
+
+  moreResourcesButton.addEventListener('click', function() {
+    if (currentTopic) {
+      previousResources = [...displayedResources];
+      fetchResources(currentTopic, 10); // Fetch 10 more resources
+      resourceHistory.push([...previousResources]); // Save previous resources
+      goBackButton.style.display = 'block';
+      goForwardButton.style.display = 'none';
+    }
+  });
+
+  goBackButton.addEventListener('click', function() {
+    if (resourceHistory.length > 0) {
+      goForwardButton.style.display = 'block';
+      displayedResources = resourceHistory.pop(); // Retrieve previous resources
+      displayResources(displayedResources);
+      if (resourceHistory.length === 0) {
+        goBackButton.style.display = 'none';
+      }
+    }
+  });
+
+  goForwardButton.addEventListener('click', function() {
+    if (previousResources.length > 0) {
+      displayedResources = [...previousResources];
+      displayResources(displayedResources);
+      goBackButton.style.display = 'block';
+      goForwardButton.style.display = 'none';
+    }
+  });
+
+  goToTopButton.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  function fetchResources(topic, count) {
+    const allResources = getDummyResources(topic);
+    const newResources = allResources.filter(resource => !displayedResources.includes(resource.name));
+
+    displayedResources = newResources.slice(0, count);
+    displayResources(displayedResources);
+  }
+
+  function displayResources(resources) {
+    resourceList.innerHTML = '';
+    resources.forEach(resource => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `<a href="${resource.link}" target="_blank">${resource.name}</a> - ${resource.description}`;
+      resourceList.appendChild(listItem);
+    });
+  }
+
+  function getDummyResources(topic) {
+    return [
+      {
+        name: 'Khan Academy',
+        link: 'https://www.khanacademy.org/',
+        description: `Free educational resources on ${topic}`
+      },
+      {
+        name: 'Coursera',
+        link: 'https://www.coursera.org/',
+        description: `Courses related to ${topic}`
+      },
+      {
+        name: 'edX',
+        link: 'https://www.edx.org/',
+        description: `Online courses for ${topic}`
+      },
+      {
+        name: 'Wikipedia',
+        link: `https://en.wikipedia.org/wiki/${encodeURIComponent(topic)}`,
+        description: `General information on ${topic}`
+      },
+      {
+        name: 'OpenStax',
+        link: 'https://openstax.org/',
+        description: `Free textbooks and resources on ${topic}`
+      },
+      {
+        name: 'MIT OpenCourseWare',
+        link: 'https://ocw.mit.edu/',
+        description: `Course materials from MIT on ${topic}`
+      },
+      {
+        name: 'Google Scholar',
+        link: 'https://scholar.google.com/',
+        description: `Scholarly articles on ${topic}`
+      },
+      {
+        name: 'YouTube',
+        link: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic),
+        description: `Videos on ${topic}`
+      },
+      {
+        name: 'TED Talks',
+        link: 'https://www.ted.com/topics/' + encodeURIComponent(topic),
+        description: `Talks related to ${topic}`
+      },
+      {
+        name: 'FutureLearn',
+        link: 'https://www.futurelearn.com/',
+        description: `Free online courses on ${topic}`
+      },
+      {
+        name: 'Academic Earth',
+        link: 'https://academicearth.org/',
+        description: `Lectures and courses on ${topic}`
+      },
+      {
+        name: 'Alison',
+        link: 'https://alison.com/',
+        description: `Free online courses on ${topic}`
+      },
+      {
+        name: 'Udacity',
+        link: 'https://www.udacity.com/',
+        description: `Courses and nanodegrees related to ${topic}`
+      },
+      {
+        name: 'Codecademy',
+        link: 'https://www.codecademy.com/',
+        description: `Programming courses on ${topic}`
+      },
+      {
+        name: 'The Open University',
+        link: 'https://www.open.edu/openlearn/',
+        description: `Free courses and materials on ${topic}`
+      }
+    ];
+  }
+});

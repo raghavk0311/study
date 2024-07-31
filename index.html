@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalized Study System</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Personalized Study System</h1>
+    <form id="studyForm">
+      <div class="form-group">
+        <label for="studyTopic">What do you need to study?</label>
+        <input type="text" id="studyTopic" required>
+      </div>
+      <button type="submit">Find Resources</button>
+    </form>
+    <button id="moreResources">More Resources</button>
+    <button id="goBack" style="display:none;">Go Back</button>
+    <button id="goForward" style="display:none;">Go Forward</button>
+    <h2>Suggested Resources</h2>
+    <ul id="resourceList"></ul>
+    <button id="clearSearchBottom">Clear Search</button>
+    <button id="goToTop">Go to the Top</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
